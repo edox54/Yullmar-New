@@ -1,0 +1,6 @@
+{
+  "name": "Yullmar LLC",
+  "description": "Sitio web para empresa de Desarrollo y Construcción Inmobiliaria",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

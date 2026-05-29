@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Mail, MapPin, Phone } from 'lucide-react';
+import { Mail, MapPin, Phone, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import React, { useState } from 'react';
 import { BlurFade } from '../components/ui/blur-fade';
 import { Particles } from '../components/ui/particles';
@@ -15,12 +15,41 @@ export function Contact() {
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate form submission
-    console.log('Form submitted:', formData);
-    alert('Mensaje enviado. Nos pondremos en contacto pronto.');
-    setFormData({ name: '', email: '', phone: '', projectType: '', message: '' });
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    setErrorMessage('');
+
+    try {
+      const response = await fetch('/contact.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setSubmitStatus('success');
+        setFormData({ name: '', email: '', phone: '', projectType: '', message: '' });
+      } else {
+        setSubmitStatus('error');
+        setErrorMessage(data.message || 'Ocurrió un error inesperado al enviar el mensaje.');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setSubmitStatus('error');
+      setErrorMessage('No pudimos conectar con el servidor de correos. Verifique su conexión de internet e intente de nuevo.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -110,81 +139,124 @@ export function Contact() {
             <div className="lg:col-span-3">
               <BlurFade delay={0.4} inView>
                 <div className="bg-white rounded-lg shadow-2xl border border-gray-100 p-8 md:p-12 hover:shadow-[0_20px_50px_rgba(197,168,128,0.15)] transition-shadow duration-500">
-                  <h3 className="text-2xl font-heading font-bold text-primary-700 mb-8">Envíanos un mensaje</h3>
-                  
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                         <label className="text-sm font-semibold text-gray-700 mb-1 block">Nombre Completo *</label>
-                         <input 
-                           type="text" 
-                           required
-                           value={formData.name}
-                           onChange={(e) => setFormData({...formData, name: e.target.value})}
-                           className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors"
-                           placeholder="Ej. Juan Pérez"
-                         />
+                  {submitStatus === 'success' ? (
+                    <div className="text-center py-12 space-y-6">
+                      <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto text-green-500 animate-bounce">
+                        <CheckCircle className="w-12 h-12" />
                       </div>
-                      <div className="space-y-2">
-                         <label className="text-sm font-semibold text-gray-700 mb-1 block">Correo Electrónico *</label>
-                         <input 
-                           type="email" 
-                           required
-                           value={formData.email}
-                           onChange={(e) => setFormData({...formData, email: e.target.value})}
-                           className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors"
-                           placeholder="juan@correo.com"
-                         />
-                      </div>
+                      <h3 className="text-3xl font-heading font-bold text-primary-700">¡Mensaje Enviado!</h3>
+                      <p className="text-gray-600 max-w-lg mx-auto font-light leading-relaxed">
+                        Agradecemos su interés en <strong>Yullmar LLC.</strong> Su requerimiento ha sido registrado en nuestro sistema. Uno de nuestros asesores estratégicos evaluará los detalles compartidos y se pondrá en contacto con usted a la brevedad posible.
+                      </p>
+                      <button
+                        onClick={() => setSubmitStatus('idle')}
+                        className="bg-primary-700 hover:bg-primary-800 text-gold font-heading font-bold uppercase tracking-wider text-xs py-3 px-8 rounded transition-all duration-300 shadow-md"
+                      >
+                        Enviar otro mensaje
+                      </button>
                     </div>
+                  ) : (
+                    <>
+                      <h3 className="text-2xl font-heading font-bold text-primary-700 mb-8">Envíanos un mensaje</h3>
+                      
+                      {submitStatus === 'error' && (
+                        <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded text-red-700 text-sm flex items-start gap-3">
+                          <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-semibold">No se pudo enviar el mensaje</p>
+                            <p className="text-red-600 font-light mt-1">{errorMessage}</p>
+                          </div>
+                        </div>
+                      )}
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                         <label className="text-sm font-semibold text-gray-700 mb-1 block">Teléfono *</label>
-                         <input 
-                           type="tel" 
-                           required
-                           value={formData.phone}
-                           onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                           className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors"
-                           placeholder="+1 (555) 000-0000"
-                         />
-                      </div>
-                      <div className="space-y-2">
-                         <label className="text-sm font-semibold text-gray-700 mb-1 block">Tipo de Proyecto *</label>
-                         <select 
-                           required
-                           value={formData.projectType}
-                           onChange={(e) => setFormData({...formData, projectType: e.target.value})}
-                           className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors appearance-none"
-                         >
-                           <option value="" disabled>Seleccione una opción</option>
-                           <option value="desarrollo">Desarrollo Inmobiliario</option>
-                           <option value="construccion">Construcción Residencial/Comercial</option>
-                           <option value="renovacion">Renovación / Remodelación</option>
-                           <option value="otro">Otro</option>
-                         </select>
-                      </div>
-                    </div>
+                      <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="space-y-2">
+                             <label className="text-sm font-semibold text-gray-700 mb-1 block">Nombre Completo *</label>
+                             <input 
+                               type="text" 
+                               required
+                               disabled={isSubmitting}
+                               value={formData.name}
+                               onChange={(e) => setFormData({...formData, name: e.target.value})}
+                               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors disabled:opacity-50"
+                               placeholder="Ej. Juan Pérez"
+                             />
+                          </div>
+                          <div className="space-y-2">
+                             <label className="text-sm font-semibold text-gray-700 mb-1 block">Correo Electrónico *</label>
+                             <input 
+                               type="email" 
+                               required
+                               disabled={isSubmitting}
+                               value={formData.email}
+                               onChange={(e) => setFormData({...formData, email: e.target.value})}
+                               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors disabled:opacity-50"
+                               placeholder="juan@correo.com"
+                             />
+                          </div>
+                        </div>
 
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold text-gray-700 mb-1 block">Mensaje / Detalles de la obra</label>
-                      <textarea 
-                        rows={5}
-                        value={formData.message}
-                        onChange={(e) => setFormData({...formData, message: e.target.value})}
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors resize-none"
-                        placeholder="Cuéntanos un poco sobre tu proyecto, ubicación y presupuesto estimado..."
-                      ></textarea>
-                    </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="space-y-2">
+                             <label className="text-sm font-semibold text-gray-700 mb-1 block">Teléfono *</label>
+                             <input 
+                               type="tel" 
+                               required
+                               disabled={isSubmitting}
+                               value={formData.phone}
+                               onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors disabled:opacity-50"
+                               placeholder="+1 (555) 000-0000"
+                             />
+                          </div>
+                          <div className="space-y-2">
+                             <label className="text-sm font-semibold text-gray-700 mb-1 block">Tipo de Proyecto *</label>
+                             <select 
+                               required
+                               disabled={isSubmitting}
+                               value={formData.projectType}
+                               onChange={(e) => setFormData({...formData, projectType: e.target.value})}
+                               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors appearance-none disabled:opacity-50"
+                             >
+                               <option value="" disabled>Seleccione una opción</option>
+                               <option value="desarrollo">Desarrollo Inmobiliario</option>
+                               <option value="construccion">Construcción Residencial/Comercial</option>
+                               <option value="renovacion">Renovación / Remodelación</option>
+                               <option value="otro">Otro</option>
+                             </select>
+                          </div>
+                        </div>
 
-                    <button 
-                      type="submit"
-                      className="w-full bg-primary-700 text-gold shadow-lg shadow-primary-700/30 hover:shadow-primary-700/50 hover:-translate-y-0.5 font-heading font-bold uppercase tracking-wider text-sm py-4 rounded transition-all duration-300"
-                    >
-                      Enviar Mensaje
-                    </button>
-                  </form>
+                        <div className="space-y-2">
+                          <label className="text-sm font-semibold text-gray-700 mb-1 block">Mensaje / Detalles de la obra</label>
+                          <textarea 
+                            rows={5}
+                            disabled={isSubmitting}
+                            value={formData.message}
+                            onChange={(e) => setFormData({...formData, message: e.target.value})}
+                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors resize-none disabled:opacity-50"
+                            placeholder="Cuéntanos un poco sobre tu proyecto, ubicación y presupuesto estimado..."
+                          ></textarea>
+                        </div>
+
+                        <button 
+                          type="submit"
+                          disabled={isSubmitting}
+                          className="w-full bg-primary-700 text-gold shadow-lg shadow-primary-700/30 hover:shadow-primary-700/50 hover:-translate-y-0.5 font-heading font-bold uppercase tracking-wider text-sm py-4 rounded transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        >
+                          {isSubmitting ? (
+                            <>
+                              <Loader2 className="w-5 h-5 animate-spin text-gold" />
+                              Enviando mensaje...
+                            </>
+                          ) : (
+                            'Enviar Mensaje'
+                          )}
+                        </button>
+                      </form>
+                    </>
+                  )}
                 </div>
               </BlurFade>
             </div>

@@ -11,6 +11,8 @@ import { Footer } from './components/layout/Footer';
 import { Home } from './pages/Home';
 import { Services } from './pages/Services';
 import { Contact } from './pages/Contact';
+import { PrivacyPolicy } from './pages/PrivacyPolicy';
+import { TermsOfService } from './pages/TermsOfService';
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -47,6 +49,8 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/servicios" element={<Services />} />
           <Route path="/contacto" element={<Contact />} />
+          <Route path="/politica-privacidad" element={<PrivacyPolicy />} />
+          <Route path="/terminos-servicio" element={<TermsOfService />} />
         </Routes>
       </main>
       <Footer />

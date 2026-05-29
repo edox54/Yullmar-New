@@ -103,11 +103,7 @@ export function Contact() {
                 ))}
               </div>
 
-              <BlurFade delay={0.6} inView className="pt-8 border-t border-gray-100">
-                <a href="https://wa.me/13057461273" target="_blank" rel="noopener noreferrer" className="w-full inline-flex justify-center items-center bg-[#25D366] text-white py-4 px-6 rounded font-heading font-bold uppercase tracking-wider text-sm transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-[#25D366]/50">
-                  Chatear por WhatsApp
-                </a>
-              </BlurFade>
+
             </div>
 
             {/* Form Side */}
@@ -144,7 +140,7 @@ export function Contact() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                         <label className="text-sm font-semibold text-gray-700 mb-1 block">Teléfono / WhatsApp *</label>
+                         <label className="text-sm font-semibold text-gray-700 mb-1 block">Teléfono *</label>
                          <input 
                            type="tel" 
                            required

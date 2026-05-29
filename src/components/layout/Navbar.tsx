@@ -30,7 +30,7 @@ export function Navbar() {
       <div className="container mx-auto max-w-7xl px-4 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
-            <span className="font-heading font-bold text-2xl tracking-tighter text-primary-700">Yullmar<span className="text-gold">.</span></span>
+            <span className="font-heading font-bold text-2xl tracking-tighter text-primary-700">Yullmar <span className="text-gold">LLC.</span></span>
           </Link>
           
           {/* Desktop Nav */}
@@ -51,7 +51,7 @@ export function Navbar() {
               to="/contacto"
               className="bg-primary-700 text-white px-5 py-2.5 rounded hover:bg-primary-600 transition-colors uppercase text-xs font-heading tracking-wider font-semibold"
             >
-              Presupuesto
+              Contacto
             </Link>
           </nav>
 
@@ -87,7 +87,7 @@ export function Navbar() {
               className="block w-full text-center bg-primary-700 text-white px-5 py-3 rounded mt-4"
               onClick={() => setIsMenuOpen(false)}
             >
-              Solicitar Presupuesto
+              Contacto
             </Link>
           </div>
         </div>

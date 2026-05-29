@@ -9,10 +9,10 @@ export function Footer() {
           
           <div>
             <Link to="/" className="inline-block mb-6">
-              <span className="font-heading font-bold text-2xl tracking-tighter text-white">Yullmar<span className="text-gold">.</span></span>
+              <span className="font-heading font-bold text-2xl tracking-tighter text-white">Yullmar <span className="text-gold">LLC.</span></span>
             </Link>
             <p className="text-gray-400 leading-relaxed mb-6">
-              Desarrollo y Construcción Inmobiliaria de Alto Nivel. Transformamos visiones en realidades tangibles en Miami y Panamá.
+              Facilitadores internacionales de soluciones financieras, logísticas, energéticas y aeronáuticas de alto impacto con alcance global.
             </p>
             <div className="flex space-x-4">
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
@@ -31,16 +31,16 @@ export function Footer() {
             <h3 className="text-white font-heading font-semibold uppercase tracking-wider mb-6 text-xs">Servicios</h3>
             <ul className="space-y-4">
               <li>
-                <Link to="/servicios" className="text-gray-400 hover:text-white transition-colors">Desarrollo Inmobiliario</Link>
+                <Link to="/servicios" className="text-gray-400 hover:text-white transition-colors">Soluciones Financieras</Link>
               </li>
               <li>
-                <Link to="/servicios" className="text-gray-400 hover:text-white transition-colors">Construcción a Medida</Link>
+                <Link to="/servicios" className="text-gray-400 hover:text-white transition-colors">Logística Internacional</Link>
               </li>
               <li>
-                <Link to="/servicios" className="text-gray-400 hover:text-white transition-colors">Renovaciones Premium</Link>
+                <Link to="/servicios" className="text-gray-400 hover:text-white transition-colors">Energía e Infraestructura</Link>
               </li>
               <li>
-                <Link to="/servicios" className="text-gray-400 hover:text-white transition-colors">Gestión de Permisos</Link>
+                <Link to="/servicios" className="text-gray-400 hover:text-white transition-colors">FBO Aéreo VIP</Link>
               </li>
             </ul>
           </div>
@@ -83,8 +83,8 @@ export function Footer() {
         <div className="border-t border-gray-800 mt-16 pt-8 text-center text-xs text-gray-500 flex flex-col md:flex-row justify-between items-center">
           <p>&copy; {new Date().getFullYear()} Yullmar LLC. Todos los derechos reservados.</p>
           <div className="flex space-x-4 mt-4 md:mt-0">
-            <Link to="/" className="hover:text-white transition-colors">Política de Privacidad</Link>
-            <Link to="/" className="hover:text-white transition-colors">Términos de Servicio</Link>
+            <Link to="/politica-privacidad" className="hover:text-white transition-colors">Política de Privacidad</Link>
+            <Link to="/terminos-servicio" className="hover:text-white transition-colors">Términos de Servicio</Link>
           </div>
         </div>
       </div>
